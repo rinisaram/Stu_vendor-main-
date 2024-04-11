@@ -1,109 +1,112 @@
 import 'package:flutter/material.dart';
+import 'payment_screen.dart';
+import 'transaction_historty.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Profile'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               "Student's",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20.0,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
+            const Text(
               "Profile",
               style: TextStyle(
                 color: Colors.orange,
-                fontSize: 20.0,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20.0),
-            Container(
-              width: 150,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white60,
-                border: Border.all(color: Colors.grey),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
-                    offset: const Offset(1, 1),
-                    blurRadius: 3.0,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Student Name: Hari"),
-                  Text("Class: 8c"),
-                  Text("ID no: TOCH21353"),
-                ],
-              ),
+            const SizedBox(height: 20.0),
+            _buildProfileCard(
+              "Student Name: Hari\nClass: 8c\nID no: TOCH21353",
+              context,
             ),
-            SizedBox(height: 20.0),
-            Container(
-              width: 150,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white60,
-                border: Border.all(color: Colors.grey),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
-                    offset: const Offset(1, 1),
-                    blurRadius: 3.0,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Balance \$200000",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 20.0),
+            _buildProfileCard(
+              "Balance \$200000",
+              context,
+              isBalanceCard: true,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("Add Fund"),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                _buildElevatedButton(context, "Add Fund", () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const PaymentGatewayScreen();
+                      },
                     ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("Transaction History"),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                  );
+                }),
+                _buildElevatedButton(context, "Transaction History", () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const TransactionHistory();
+                      },
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileCard(String text, BuildContext context,
+      {bool isBalanceCard = false}) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            offset: const Offset(0, 2),
+            blurRadius: 8.0,
+          ),
+        ],
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: isBalanceCard ? 20 : 16,
+          fontWeight: isBalanceCard ? FontWeight.bold : FontWeight.normal,
+          color: isBalanceCard ? Colors.black87 : Colors.black54,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildElevatedButton(
+      BuildContext context, String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.blueGrey[800], // Consistent button color
+        onPrimary: Colors.white, // Text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
     );
