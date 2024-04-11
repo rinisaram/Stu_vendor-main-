@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../payment_screen.dart';
 import '../transaction_historty.dart';
+import 'widget/qrcode_widget.dart';
 
 class VendorScreen extends StatelessWidget {
   const VendorScreen({Key? key}) : super(key: key);
@@ -10,7 +9,15 @@ class VendorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return BarcodeDisplayScreen();
+              },
+            ),
+          );
+        },
         child: Icon(Icons.qr_code_2_rounded),
       ),
       body: Padding(
@@ -69,7 +76,6 @@ class VendorScreen extends StatelessWidget {
   Widget _buildProfileCard(String text, BuildContext context,
       {bool isBalanceCard = false}) {
     return Container(
-      
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
