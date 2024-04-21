@@ -69,7 +69,8 @@ class PaymentGatewayScreen extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green[800], // Enhanced button color
+                  backgroundColor: Colors.blueGrey[800],
+                  // primary: Colors.green[800], // Enhanced button color
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   textStyle: const TextStyle(fontSize: 20),
                   shape: RoundedRectangleBorder(

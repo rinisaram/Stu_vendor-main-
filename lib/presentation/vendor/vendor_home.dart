@@ -1,22 +1,53 @@
+import 'package:akhilettan_ka_project/presentation/vendor/deposit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../transaction_historty.dart';
-import 'widget/qrcode_widget.dart';
 
-class VendorScreen extends StatelessWidget {
+class VendorScreen extends StatefulWidget {
   const VendorScreen({Key? key}) : super(key: key);
+
+  @override
+  State<VendorScreen> createState() => _VendorScreenState();
+}
+
+class _VendorScreenState extends State<VendorScreen> {
+  String _scanBarcode = 'Unknown';
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> startBarcodeScanStream() async {
+    FlutterBarcodeScanner.getBarcodeStreamReceiver(
+            '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
+        .listen((barcode) => print(barcode));
+  }
+
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return BarcodeDisplayScreen();
-              },
-            ),
-          );
+          scanBarcodeNormal();
         },
         child: Icon(Icons.qr_code_2_rounded),
       ),
@@ -53,7 +84,7 @@ class VendorScreen extends StatelessWidget {
               isBalanceCard: true,
             ),
             const SizedBox(height: 20.0),
-            Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildElevatedButton(context, "Transaction History", () {
@@ -61,6 +92,15 @@ class VendorScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) {
                         return const TransactionHistory();
+                      },
+                    ),
+                  );
+                }),
+                _buildElevatedButton(context, "Deposit", () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const DepositPage();
                       },
                     ),
                   );
@@ -106,8 +146,8 @@ class VendorScreen extends StatelessWidget {
       onPressed: onPressed,
       child: Text(text),
       style: ElevatedButton.styleFrom(
-        primary: Colors.blueGrey[800], // Consistent button color
-        onPrimary: Colors.white, // Text color
+        // primary: Colors.blueGrey[800], // Consistent button color
+        // onPrimary: Colors.white, // Text color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
