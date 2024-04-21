@@ -99,8 +99,10 @@ class LoginPage extends StatelessWidget {
         style: const TextStyle(fontSize: 18),
       ),
       style: ElevatedButton.styleFrom(
-        primary: color,
-        onPrimary: Colors.white,
+        backgroundColor: color,
+        // primary: color,
+
+        // onPrimary: Colors.white,
         minimumSize: const Size(200, 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

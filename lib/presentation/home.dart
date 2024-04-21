@@ -103,8 +103,7 @@ class HomeScreen extends StatelessWidget {
       onPressed: onPressed,
       child: Text(text),
       style: ElevatedButton.styleFrom(
-        primary: Colors.blueGrey[800], // Consistent button color
-        onPrimary: Colors.white, // Text color
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
