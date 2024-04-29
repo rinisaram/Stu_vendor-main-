@@ -33,7 +33,9 @@ dependencies:
     sdk: flutter
   flutter_barcode_scanner: ^2.0.0
   qr_code_scanner: ^1.0.1
-
+  hive:
+  hive_flutter:
+  path_provider:
 dev_dependencies:
 
   # The "flutter_lints" package below contains a set of recommended lints to

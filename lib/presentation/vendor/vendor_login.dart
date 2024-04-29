@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; // Import for using Timer
+import 'dart:async'; 
 
-import 'vendor_home.dart'; // Assuming this is the correct import for the vendor home screen
+import 'vendor_home.dart'; 
 
 class LoginPageVendor extends StatelessWidget {
   LoginPageVendor({Key? key}) : super(key: key);
@@ -73,11 +73,10 @@ class LoginPageVendor extends StatelessWidget {
         ),
       );
     } else {
-      // Show a loading indicator before navigating
       showDialog(
         context: context,
         barrierDismissible:
-            false, // User cannot dismiss the dialog by tapping outside it
+            false, 
         builder: (BuildContext context) {
           return Dialog(
             child: Padding(
@@ -97,9 +96,8 @@ class LoginPageVendor extends StatelessWidget {
 
       // Wait for 2 seconds
       Timer(Duration(seconds: 2), () {
-        Navigator.of(context).pop(); // Pop the dialog
+        Navigator.of(context).pop();
         Navigator.pushReplacement(
-          // Navigate to the home page
           context,
           MaterialPageRoute(builder: (context) => const VendorScreen()),
         );

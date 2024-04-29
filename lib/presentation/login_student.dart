@@ -93,11 +93,9 @@ class LoginPageStudnet extends StatelessWidget {
         },
       );
 
-      // Wait for 2 seconds
       Timer(Duration(seconds: 2), () {
-        Navigator.of(context).pop(); // Pop the dialog
+        Navigator.of(context).pop();
         Navigator.pushReplacement(
-          // Navigate to the home page
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );

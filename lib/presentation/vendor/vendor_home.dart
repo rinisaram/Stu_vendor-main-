@@ -1,7 +1,9 @@
-import 'package:stu_vendor_main/presentation/vendor/deposit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:stu_vendor_main/presentation/vendor/deposit.dart';
+
 import '../transaction_historty.dart';
 
 class VendorScreen extends StatefulWidget {
@@ -12,34 +14,70 @@ class VendorScreen extends StatefulWidget {
 }
 
 class _VendorScreenState extends State<VendorScreen> {
-  String _scanBarcode = 'Unknown';
+  List<String> barcodes = []; // List to store barcode strings
+
   @override
   void initState() {
     super.initState();
+    initializeHive();
+    loadBarcodes();
+  }
+
+  Future<void> initializeHive() async {
+    final directory = await getApplicationDocumentsDirectory();
+    Hive.init(directory.path);
+    await Hive.openBox<String>('barcodes');
   }
 
   Future<void> startBarcodeScanStream() async {
     FlutterBarcodeScanner.getBarcodeStreamReceiver(
             '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
-        .listen((barcode) => print(barcode));
+        .listen((barcode) {
+      if (!mounted) return;
+      if (barcode != '-1') {
+        saveBarcode(barcode);
+      }
+    });
   }
 
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes;
+  void saveBarcode(String barcode) async {
+    var box = Hive.box<String>('barcodes');
+    await box.add(barcode);
+    loadBarcodes();
+    showBarcodeSavedDialog(barcode);
+  }
 
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    if (!mounted) return;
-
+  Future<void> loadBarcodes() async {
+    var box = Hive.box<String>('barcodes');
     setState(() {
-      _scanBarcode = barcodeScanRes;
+      barcodes = box.values.toList();
     });
+  }
+
+  void deleteBarcode(int index) async {
+    var box = Hive.box<String>('barcodes');
+    await box.deleteAt(index); // Delete the item at the index
+    loadBarcodes(); // Reload barcodes after deletion
+  }
+
+  void showBarcodeSavedDialog(String barcode) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Barcode Scanned"),
+          content: Text("The scanned barcode is: $barcode"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -47,7 +85,7 @@ class _VendorScreenState extends State<VendorScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          scanBarcodeNormal();
+          startBarcodeScanStream();
         },
         child: Icon(Icons.qr_code_2_rounded),
       ),
@@ -56,33 +94,17 @@ class _VendorScreenState extends State<VendorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Vendor's",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              "Profile",
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const Text("Vendor's Profile",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 20.0),
             _buildProfileCard(
-              "Cashir Name: Hari\nCashirId: 8c\nDept no: TOCH21353",
-              context,
-            ),
+                "Cashier Name: Hari\nCashier ID: 8c\nDept no: TOCH21353",
+                context),
             const SizedBox(height: 20.0),
-            _buildProfileCard(
-              "Balance \$200000",
-              context,
-              isBalanceCard: true,
-            ),
+            _buildProfileCard("Balance \$200000", context, isBalanceCard: true),
             const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,22 +112,34 @@ class _VendorScreenState extends State<VendorScreen> {
                 _buildElevatedButton(context, "Transaction History", () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) {
-                        return const TransactionHistory();
-                      },
+                      builder: (context) => const TransactionHistory(),
                     ),
                   );
                 }),
                 _buildElevatedButton(context, "Deposit", () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) {
-                        return const DepositPage();
-                      },
+                      builder: (context) => const DepositPage(),
                     ),
                   );
                 }),
               ],
+            ),
+            const SizedBox(height: 20.0),
+            Text('History of scanned barcodes', style: TextStyle(fontSize: 20)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: barcodes.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(barcodes[index]),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => deleteBarcode(index),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -146,12 +180,16 @@ class _VendorScreenState extends State<VendorScreen> {
       onPressed: onPressed,
       child: Text(text),
       style: ElevatedButton.styleFrom(
-        // primary: Colors.blueGrey[800], // Consistent button color
-        // onPrimary: Colors.white, // Text color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
 }
