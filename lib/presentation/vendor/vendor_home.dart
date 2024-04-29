@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:stu_vendor_main/presentation/vendor/deposit.dart';
 
 import '../transaction_historty.dart';
+import 'details.dart';
 
 class VendorScreen extends StatefulWidget {
   const VendorScreen({Key? key}) : super(key: key);
@@ -137,6 +138,12 @@ class _VendorScreenState extends State<VendorScreen> {
                       icon: Icon(Icons.delete, color: Colors.red),
                       onPressed: () => deleteBarcode(index),
                     ),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            StudentProfilePage(studentId: barcodes[index]),
+                      ));
+                    },
                   );
                 },
               ),
