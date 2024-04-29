@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "akhilettan_ka_project" "\0"
+            VALUE "FileDescription", "stu_vendor_main" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "akhilettan_ka_project" "\0"
+            VALUE "InternalName", "stu_vendor_main" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "akhilettan_ka_project.exe" "\0"
-            VALUE "ProductName", "akhilettan_ka_project" "\0"
+            VALUE "OriginalFilename", "stu_vendor_main.exe" "\0"
+            VALUE "ProductName", "stu_vendor_main" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
