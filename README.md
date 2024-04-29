@@ -1,4 +1,4 @@
-# akhilettan_ka_project
+# stu_vendor_main
 
 A new Flutter project.
 

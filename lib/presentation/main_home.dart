@@ -1,10 +1,11 @@
-import 'package:akhilettan_ka_project/presentation/home.dart';
 import 'package:flutter/material.dart';
 
+import 'login_student.dart';
 import 'vendor/vendor_home.dart';
+import 'vendor/vendor_login.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class MainHome extends StatelessWidget {
+  const MainHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return const HomeScreen();
+                          return LoginPageStudnet();
                         },
                       ),
                     );
@@ -70,7 +71,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return const VendorScreen();
+                          return  LoginPageVendor();
                         },
                       ),
                     );
@@ -96,7 +97,7 @@ class LoginPage extends StatelessWidget {
       icon: Icon(icon, size: 24),
       label: Text(
         label,
-        style: const TextStyle(fontSize: 18),
+        style: const TextStyle(fontSize: 18, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
